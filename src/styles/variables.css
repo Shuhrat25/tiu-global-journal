@@ -1,0 +1,98 @@
+/* Design tokens — values taken from the Figma file (Home frame, 1920px) */
+:root {
+  /* Brand */
+  --color-primary: #3861a7;
+  --color-primary-dark: #224e98;
+  --color-primary-light: #708fc3;
+  --color-primary-bright: #4172c7;
+  --color-primary-soft: #e5eff9;
+  --color-link-footer: #4a83e5;
+
+  /* Text */
+  --color-heading: #1e2939;
+  --color-text: #4a5565;
+  --color-text-muted: #6a7282;
+  --color-text-nav: #364153;
+  --color-text-dark: #081e3a;
+  --color-text-black: #02090f;
+  --color-text-black-2: #333c42;
+  --color-text-hero: #dbeafe;
+  --color-placeholder: #a1a3a8;
+
+  /* Surfaces */
+  --color-white: #fff;
+  --color-bg-soft: #f9fafb;
+  --color-bg-topbar: #eef2f6;
+  --color-bg-news: #ebf0f6;
+  --color-bg-file: #f2f4f8;
+  --color-footer: #101828;
+  --color-footer-chip: #1e2939;
+  --color-footer-text: #d1d5dc;
+  --color-footer-muted: #99a1af;
+
+  /* Lines */
+  --color-border: #e5e7eb;
+  --color-border-soft: #dce4eb;
+  --color-border-cover: #dae5f0;
+  --color-dot: #d1d5dc;
+
+  /* Badges */
+  --color-badge-bg: #dbeafe;
+  --color-badge-text: #1447e6;
+
+  /* Typography
+   * The design uses SF Pro Display. We rely on the platform UI font with the
+   * closest metrics: SF Pro on Apple devices, Segoe UI Variable on Windows,
+   * and the bundled Inter everywhere else. */
+  --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI',
+    'Inter', Roboto, Arial, sans-serif;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-float: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-cover: 0 4px 10px rgb(8 30 58 / 0.1);
+
+  /* Layout */
+  --container: 1500px;
+  --gutter: 16px;
+  --section-space: clamp(56px, 7vw, 120px);
+  --header-h: 102px;
+
+  --transition: 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 24px;
+  }
+}
+
+/* From 1024px the fixed social sidebar (44px) is shown on the left edge,
+   so the side gutter must leave room for it until the 1500px container
+   has enough free space around it by itself. */
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 56px;
+  }
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --gutter: 32px;
+  }
+}
+
+@media (max-width: 1279.98px) {
+  :root {
+    --header-h: 76px;
+  }
+}

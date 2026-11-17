@@ -1,0 +1,160 @@
+/*
+ * Personal cabinet (admin panel) design tokens and form controls.
+ * The cabinet screens in Figma use the Tailwind palette, so the tones below
+ * are the Tailwind 100/700 pairs; the brand blue stays the site's primary.
+ */
+:root {
+  --cab-bg: #f9fafb;
+  --cab-surface: #fff;
+  --cab-border: #e5e7eb;
+  --cab-border-strong: #d1d5dc;
+  --cab-text: #101828;
+  --cab-text-2: #364153;
+  --cab-muted: #6a7282;
+  --cab-subtle: #4a5565;
+  --cab-head-bg: #f9fafb;
+  --cab-radius: 14px;
+  --cab-radius-sm: 10px;
+  --cab-shadow-modal: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  --tone-blue-bg: #dbeafe;
+  --tone-blue-fg: #1447e6;
+  --tone-yellow-bg: #fef9c2;
+  --tone-yellow-fg: #a65f00;
+  --tone-green-bg: #dcfce7;
+  --tone-green-fg: #008236;
+  --tone-orange-bg: #ffedd4;
+  --tone-orange-fg: #ca3500;
+  --tone-red-bg: #ffe2e2;
+  --tone-red-fg: #c10007;
+  --tone-purple-bg: #f3e8ff;
+  --tone-purple-fg: #8200db;
+  --tone-teal-bg: #cbfbf1;
+  --tone-teal-fg: #00786f;
+  --tone-indigo-bg: #e0e7ff;
+  --tone-indigo-fg: #432dd7;
+  --tone-gray-bg: #f3f4f6;
+  --tone-gray-fg: #364153;
+
+  /* fills under white text, at least 4.5:1 (WCAG AA): success 4.9:1, its hover 7.1:1, danger 4.8:1 */
+  --cab-success: #008236;
+  --cab-success-hover: #016630;
+  --cab-danger: #e7000b;
+}
+
+/* ---------- form controls (use these classes in cabinet forms) ---------- */
+.cab-input,
+.cab-select,
+.cab-textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid var(--cab-border-strong);
+  border-radius: var(--cab-radius-sm);
+  background: var(--cab-surface);
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--cab-text);
+  outline: none;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.cab-input::placeholder,
+.cab-textarea::placeholder {
+  color: #99a1af;
+}
+
+.cab-input:focus,
+.cab-select:focus,
+.cab-textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(56 97 167 / 0.15);
+}
+
+.cab-input.has-error,
+.cab-select.has-error,
+.cab-textarea.has-error {
+  border-color: var(--cab-danger);
+}
+
+.cab-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.cab-select {
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236a7282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+.cab-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--cab-text-2);
+  cursor: pointer;
+}
+
+.cab-check input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.cab-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--cab-border);
+  border-radius: var(--cab-radius-sm);
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--cab-text-2);
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+}
+
+.cab-choice:hover {
+  border-color: var(--cab-border-strong);
+}
+
+.cab-choice:has(input:checked) {
+  border-color: var(--color-primary);
+  background: #eff6ff;
+}
+
+.cab-choice input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--color-primary);
+}
+
+/* key–value rows inside modals ("Muallif: …") */
+.cab-meta {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--cab-subtle);
+}
+
+.cab-meta strong {
+  color: var(--cab-text);
+  font-weight: 500;
+}
