@@ -4,6 +4,9 @@ Responsive website of the Tashkent International University scientific journal,
 built with **Vue 3 + Vite** from the Figma design: the public pages and a personal cabinet
 (admin panel) for authors, editors and reviewers. Four interface languages.
 
+**Live:** https://tiu-global-journal.vercel.app — deployed on Vercel from `main` (every push redeploys).
+The cabinet is at `/login` (demo: choose a role, no password).
+
 ## Run
 
 ```bash
