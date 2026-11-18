@@ -1,22 +1,33 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { sidebarSocials } from '@/data/site'
+import { getSocials } from '@/api/home'
 
 const { t } = useI18n()
+
+const socials = ref([]) // приходят с API: title, options (ссылка), files (иконка)
+
+onMounted(async () => {
+  try {
+    socials.value = await getSocials()
+  } catch (error) {
+    console.error('Не удалось загрузить соцсети', error)
+  }
+})
 </script>
 
 <template>
   <aside class="social-sidebar" :aria-label="t('socials.label')">
     <ul>
-      <li v-for="social in sidebarSocials" :key="social.name">
+      <li v-for="social in socials" :key="social.id">
         <a
           class="social-sidebar__link"
-          :href="social.href"
+          :href="social.options"
           target="_blank"
           rel="noopener noreferrer"
-          :aria-label="social.name"
+          :aria-label="social.title"
         >
-          <img :src="social.icon" alt="" width="26" height="26" />
+          <img :src="social.files[0].img" alt="" width="26" height="26" />
         </a>
       </li>
     </ul>

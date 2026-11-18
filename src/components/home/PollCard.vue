@@ -2,10 +2,33 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pollOptions } from '@/data/home'
+import { getPollResults, sendVote } from '@/api/home'
 import BaseButton from '@/components/ui/BaseButton.vue'
 
 const { t } = useI18n()
 const selected = ref(null)
+const voted = ref(false) // после голоса показываем проценты и больше не даём голосовать
+const results = ref({}) // с API: { result_1: 103, result_2: 22, ... }
+
+// Ответы в API пронумерованы от 1 до 5 в том же порядке, что и pollOptions
+async function vote() {
+  const option = pollOptions.indexOf(selected.value) + 1
+  try {
+    await sendVote(option)
+    results.value = await getPollResults()
+    voted.value = true
+  } catch (error) {
+    console.error('Не удалось отправить голос', error)
+  }
+}
+
+// Сколько процентов проголосовали за ответ номер index (с нуля)
+function percent(index) {
+  const counts = Object.values(results.value)
+  const total = counts.reduce((sum, count) => sum + count, 0)
+  const count = results.value[`result_${index + 1}`] ?? 0
+  return total ? Math.round((count / total) * 100) : 0
+}
 </script>
 
 <template>
@@ -18,14 +41,23 @@ const selected = ref(null)
 
       <div class="poll__options">
         <label
-          v-for="option in pollOptions"
+          v-for="(option, index) in pollOptions"
           :key="option"
           class="poll__option"
           :class="{ 'is-selected': selected === option }"
         >
-          <input v-model="selected" class="visually-hidden" type="radio" name="poll" :value="option" />
+          <input
+            v-model="selected"
+            class="visually-hidden"
+            type="radio"
+            name="poll"
+            :value="option"
+            :disabled="voted"
+            @change="vote"
+          />
           <span class="poll__radio" aria-hidden="true" />
           {{ t(`poll.options.${option}`) }}
+          <span v-if="voted" class="poll__percent">{{ percent(index) }}%</span>
         </label>
       </div>
     </fieldset>
@@ -112,6 +144,11 @@ const selected = ref(null)
 .poll__option.is-selected {
   border-color: var(--color-primary);
   background: var(--color-primary-soft);
+}
+
+.poll__percent {
+  margin-left: auto;
+  color: var(--color-primary);
 }
 
 .poll__option:focus-within {

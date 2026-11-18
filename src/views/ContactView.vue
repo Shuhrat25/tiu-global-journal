@@ -1,12 +1,23 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PageBanner from '@/components/page/PageBanner.vue'
 import ContactForm from '@/components/home/ContactForm.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import { contactSocials, contacts } from '@/data/site'
+import { contactSocials } from '@/data/site'
+import { getContacts } from '@/api/home'
 
 const { t, locale } = useI18n()
+
+const contacts = ref({}) // почта и телефон с API (те же, что в шапке и футере)
+
+onMounted(async () => {
+  try {
+    contacts.value = await getContacts()
+  } catch (error) {
+    console.error('Не удалось загрузить контакты', error)
+  }
+})
 
 const MAP_QUERY = 'Tashkent International University, Tashkent'
 

@@ -201,6 +201,7 @@ export default {
     "removeFile": "Faylni öçiriş",
     "submit": "Murojaatni yuboriş",
     "success": "Rahmat! Murojaatingiz qabul qilindi, tez orada aloqaga çiqamiz.",
+    "sendError": "Murojaatni yuborib bölmadi. Birozdan söng qayta urinib köring.",
     "errors": {
       "name": "Ism-şarifingizni kiriting",
       "phone": "Telefon raqamni töliq kiriting",

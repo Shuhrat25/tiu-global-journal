@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import { sendFeedback } from '@/api/home'
 import { focusFirstInvalid } from '@/utils/focusFirstInvalid'
 import folderIcon from '@/assets/icons/folder.svg'
 
@@ -28,6 +29,8 @@ const form = reactive({
 const errors = reactive({})
 const dragging = ref(false)
 const sent = ref(false)
+const sending = ref(false) // пока идёт отправка, кнопка выключена
+const sendError = ref(false)
 const formEl = ref(null)
 const fileInput = ref(null)
 
@@ -92,16 +95,33 @@ function validate() {
   return !errors.name && !errors.phone && !errors.email && !errors.message
 }
 
-function onSubmit() {
+async function onSubmit() {
   sent.value = false
+  sendError.value = false
   if (!validate()) {
     focusFirstInvalid(formEl.value)
     return
   }
-  // TODO: connect to the backend API when it is ready
-  sent.value = true
-  Object.assign(form, { name: '', phone: '', email: '', message: '' })
-  clearFile()
+
+  // поля называются так, как их ждёт API
+  const formData = new FormData()
+  formData.append('fio', form.name.trim())
+  formData.append('phone', '+998' + form.phone.replace(/\s/g, '')) // "90 123 45 67" → "+998901234567"
+  formData.append('email', form.email.trim())
+  formData.append('message', form.message.trim())
+  if (form.file) formData.append('file', form.file)
+
+  sending.value = true
+  try {
+    await sendFeedback(formData)
+    sent.value = true
+    Object.assign(form, { name: '', phone: '', email: '', message: '' })
+    clearFile()
+  } catch (error) {
+    console.error('Не удалось отправить вопрос', error)
+    sendError.value = true
+  }
+  sending.value = false
 }
 
 const errorText = (key) => t(`contactForm.errors.${key}`, { max: MAX_FILE_MB })
@@ -213,8 +233,9 @@ const errorText = (key) => t(`contactForm.errors.${key}`, { max: MAX_FILE_MB })
     </div>
 
     <div class="contact-form__footer">
-      <BaseButton type="submit">{{ t('contactForm.submit') }}</BaseButton>
+      <BaseButton type="submit" :disabled="sending">{{ t('contactForm.submit') }}</BaseButton>
       <p v-if="sent" class="contact-form__success" role="status">{{ t('contactForm.success') }}</p>
+      <p v-if="sendError" class="contact-form__send-error" role="alert">{{ t('contactForm.sendError') }}</p>
     </div>
   </form>
 </template>
@@ -388,6 +409,11 @@ const errorText = (key) => t(`contactForm.errors.${key}`, { max: MAX_FILE_MB })
 .contact-form__success {
   font-size: 15px;
   color: #1a7f4b;
+}
+
+.contact-form__send-error {
+  font-size: 15px;
+  color: #e5484d;
 }
 
 @media (max-width: 639.98px) {

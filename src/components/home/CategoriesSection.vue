@@ -1,11 +1,25 @@
 <script setup>
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { categories } from '@/data/home'
+import { getCategories } from '@/api/home'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import AppIcon from '@/components/ui/AppIcon.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+// приходят с API: title, content (описание), posts (сколько статей), files (иконка)
+const categories = ref([])
+
+async function loadCategories() {
+  try {
+    categories.value = await getCategories()
+  } catch (error) {
+    console.error('Не удалось загрузить направления', error)
+  }
+}
+
+onMounted(loadCategories)
+watch(locale, loadCategories) // названия на другом языке
 </script>
 
 <template>
@@ -18,12 +32,12 @@ const { t } = useI18n()
           <a class="category" href="#">
             <div class="category__top">
               <span class="category__icon">
-                <AppIcon :name="category.icon" :size="32" />
+                <img :src="category.files[0].img" alt="" width="32" height="32" />
               </span>
-              <span class="category__count">{{ t('categories.count', category.count) }}</span>
+              <span class="category__count">{{ t('categories.count', category.posts) }}</span>
             </div>
-            <h3 class="category__title">{{ t(`categories.items.${category.id}.title`) }}</h3>
-            <p class="category__desc">{{ t(`categories.items.${category.id}.description`) }}</p>
+            <h3 class="category__title">{{ category.title }}</h3>
+            <p class="category__desc">{{ category.content }}</p>
           </a>
         </li>
       </ul>

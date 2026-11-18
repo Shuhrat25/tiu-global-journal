@@ -1,12 +1,32 @@
 <script setup>
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { featuredIssue } from '@/data/home'
+import { getGallery } from '@/api/home'
 import buildingImage from '@/assets/images/university-building.jpg'
-import coverImage from '@/assets/images/journal-cover.jpg'
 import bookIcon from '@/assets/icons/book-open.svg'
 import downloadIcon from '@/assets/icons/download.svg'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+// Номер журнала из API: title и files — PDF журнала (type: 'file') и обложка (type: 'image')
+const journal = ref(null)
+const pdfUrl = ref('#')
+const coverUrl = ref('')
+
+async function loadJournal() {
+  try {
+    journal.value = await getGallery()
+    for (const file of journal.value.files) {
+      if (file.type === 'file') pdfUrl.value = file.img
+      if (file.type === 'image') coverUrl.value = file.img
+    }
+  } catch (error) {
+    console.error('Не удалось загрузить журнал', error)
+  }
+}
+
+onMounted(loadJournal)
+watch(locale, loadJournal) // название на другом языке
 </script>
 
 <template>
@@ -20,13 +40,13 @@ const { t } = useI18n()
             <img :src="bookIcon" alt="" width="32" height="32" />
           </span>
           <span class="journal__cover">
-            <img :src="coverImage" :alt="t('journal.coverAlt')" width="168" height="237" loading="lazy" />
+            <img v-if="coverUrl" :src="coverUrl" :alt="t('journal.coverAlt')" width="168" height="237" loading="lazy" />
           </span>
         </div>
 
-        <h2 class="journal__title">{{ t('journal.title') }}</h2>
+        <h2 class="journal__title">{{ journal?.title }}</h2>
 
-        <a class="journal__cta" :href="featuredIssue.href">
+        <a class="journal__cta" :href="pdfUrl" target="_blank" rel="noopener noreferrer">
           <img :src="downloadIcon" alt="" width="24" height="24" />
           {{ t('journal.cta') }}
         </a>

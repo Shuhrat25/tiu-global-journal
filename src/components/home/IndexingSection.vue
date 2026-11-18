@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { indexingBases } from '@/data/home'
+import { getBases } from '@/api/home'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import LogoBox from '@/components/ui/LogoBox.vue'
@@ -9,7 +9,9 @@ import LogoBox from '@/components/ui/LogoBox.vue'
 const { t } = useI18n()
 
 const AUTOPLAY_MS = 3500
-const total = indexingBases.length
+
+const bases = ref([])
+const total = computed(() => bases.value.length)
 
 const viewport = ref(null)
 const perView = ref(5)
@@ -18,14 +20,14 @@ const animate = ref(true)
 const paused = ref(false)
 
 // Clones of the first slides at the end make the loop seamless
-const slides = computed(() => [...indexingBases, ...indexingBases.slice(0, perView.value)])
-const activeDot = computed(() => index.value % total)
+const slides = computed(() => [...bases.value, ...bases.value.slice(0, perView.value)])
+const activeDot = computed(() => index.value % total.value)
 
 let timer = null
 let resizeObserver = null
 
 function next() {
-  if (index.value >= total) return
+  if (index.value >= total.value) return
   animate.value = true
   index.value += 1
 }
@@ -34,12 +36,12 @@ async function prev() {
   if (index.value === 0) {
     // jump (without animation) to the cloned copy, then slide back by one
     animate.value = false
-    index.value = total
+    index.value = total.value
     await nextTick()
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         animate.value = true
-        index.value = total - 1
+        index.value = total.value - 1
       })
     })
     return
@@ -54,7 +56,7 @@ function goTo(i) {
 }
 
 function onTransitionEnd() {
-  if (index.value >= total) {
+  if (index.value >= total.value) {
     animate.value = false
     index.value = 0
   }
@@ -83,11 +85,17 @@ function stopAutoplay() {
   timer = null
 }
 
-onMounted(() => {
+onMounted(async () => {
   updatePerView()
   resizeObserver = new ResizeObserver(updatePerView)
   resizeObserver.observe(viewport.value)
   startAutoplay()
+
+  try {
+    bases.value = await getBases()
+  } catch (error) {
+    console.error('Не удалось загрузить базы индексации', error)
+  }
 })
 
 onBeforeUnmount(() => {
@@ -122,18 +130,18 @@ onBeforeUnmount(() => {
           >
             <li
               v-for="(base, i) in slides"
-              :key="`${base.name}-${i}`"
+              :key="`${base.id}-${i}`"
               class="carousel__slide"
               :aria-hidden="i < index || i >= index + perView"
             >
               <a
                 class="index-card"
-                :href="base.href"
+                :href="base.options"
                 target="_blank"
                 rel="noopener noreferrer"
                 :tabindex="i < index || i >= index + perView ? -1 : 0"
               >
-                <LogoBox :src="base.logo" :alt="base.name" :box="base.box" ratio="182 / 104" />
+                <LogoBox :src="base.files[0].img" :alt="base.title" ratio="182 / 104" />
               </a>
             </li>
           </ul>

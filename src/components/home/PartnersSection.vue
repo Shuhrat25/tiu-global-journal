@@ -1,11 +1,22 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { partners } from '@/data/home'
+import { getPartners } from '@/api/home'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import LogoBox from '@/components/ui/LogoBox.vue'
 
 const { t } = useI18n()
+
+const partners = ref([])
+
+onMounted(async () => {
+  try {
+    partners.value = await getPartners()
+  } catch (error) {
+    console.error('Не удалось загрузить партнёров', error)
+  }
+})
 </script>
 
 <template>
@@ -14,8 +25,8 @@ const { t } = useI18n()
       <SectionHeader id="partners-title" :title="t('partners.title')" :subtitle="t('partners.subtitle')" />
 
       <ul class="partners">
-        <li v-for="partner in partners" :key="partner.name" class="partner">
-          <LogoBox :src="partner.logo" :alt="partner.name" :box="partner.box" ratio="206 / 136" />
+        <li v-for="partner in partners" :key="partner.id" class="partner">
+          <LogoBox :src="partner.files[0].img" :alt="partner.title" ratio="206 / 136" />
         </li>
       </ul>
 

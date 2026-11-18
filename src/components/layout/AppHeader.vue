@@ -2,7 +2,8 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { SUBMIT_ROUTE, contacts, mainMenu } from '@/data/site'
+import { SUBMIT_ROUTE, mainMenu } from '@/data/site'
+import { getContacts } from '@/api/home'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
@@ -18,6 +19,16 @@ import userIcon from '@/assets/icons/user.svg'
 
 const { t } = useI18n()
 const route = useRoute()
+
+const contacts = ref({}) // почта и телефон с API
+
+onMounted(async () => {
+  try {
+    contacts.value = await getContacts()
+  } catch (error) {
+    console.error('Не удалось загрузить контакты', error)
+  }
+})
 
 const openDropdown = ref(null) // index of the desktop dropdown that is open
 const mobileOpen = ref(false)

@@ -1,11 +1,23 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { articles, latestIssue } from '@/data/home'
+import { latestIssue } from '@/data/home'
+import { getPosts } from '@/api/home'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ArticleCard from './ArticleCard.vue'
 
 const { t } = useI18n()
+
+const articles = ref([]) // приходят с API
+
+onMounted(async () => {
+  try {
+    articles.value = await getPosts()
+  } catch (error) {
+    console.error('Не удалось загрузить статьи', error)
+  }
+})
 </script>
 
 <template>

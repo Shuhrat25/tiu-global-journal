@@ -1,6 +1,8 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { contacts, footerColumns, footerSocials, legalLinks } from '@/data/site'
+import { footerColumns, footerSocials, legalLinks } from '@/data/site'
+import { getContacts } from '@/api/home'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import AppLink from '@/components/ui/AppLink.vue'
 
@@ -9,6 +11,16 @@ import phoneIcon from '@/assets/icons/phone-footer.svg'
 import mailIcon from '@/assets/icons/mail-footer.svg'
 
 const { t } = useI18n()
+
+const contacts = ref({}) // почта и телефон с API
+
+onMounted(async () => {
+  try {
+    contacts.value = await getContacts()
+  } catch (error) {
+    console.error('Не удалось загрузить контакты', error)
+  }
+})
 </script>
 
 <template>

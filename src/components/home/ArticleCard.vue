@@ -1,59 +1,70 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { formatDate } from '@/i18n/dates'
+import { toIsoDate } from '@/api/home'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import authorIcon from '@/assets/icons/author.svg'
 import calendarIcon from '@/assets/icons/calendar-sm.svg'
 import eyeIcon from '@/assets/icons/eye-sm.svg'
 import downloadIcon from '@/assets/icons/download-sm.svg'
 
+// article — статья из API: title, content, authors, category, page ("36-41"),
+// views, download (сколько скачали), files (PDF), created_at
 const props = defineProps({
   article: { type: Object, required: true },
 })
 
 const { t, locale } = useI18n()
-/* shortcut for the translated fields of this article */
-const text = (field) => t(`articles.items.${props.article.id}.${field}`)
+
+const pages = props.article.page.split('-') // "36-41" → ["36", "41"]
+const authors = props.article.authors.map((author) => author.title).join(', ')
+const excerpt = props.article.content.replace(/<[^>]*>/g, '') // описание приходит с HTML-тегами
+const date = toIsoDate(props.article.created_at)
 </script>
 
 <template>
   <article class="article">
     <div class="article__head">
-      <span class="article__badge">{{ text('category') }}</span>
-      <span class="article__pages">{{ t('articles.pages', { from: article.pages[0], to: article.pages[1] }) }}</span>
+      <span class="article__badge">{{ article.category.title }}</span>
+      <span class="article__pages">{{ t('articles.pages', { from: pages[0], to: pages[1] }) }}</span>
     </div>
 
     <h3 class="article__title">
-      <a href="#">{{ text('title') }}</a>
+      <a :href="article.files" target="_blank" rel="noopener noreferrer">{{ article.title }}</a>
     </h3>
-    <a class="article__doi" :href="article.doi" target="_blank" rel="noopener noreferrer">DOI: {{ article.doi }}</a>
-    <p class="article__excerpt">{{ text('excerpt') }}</p>
+    <!-- в API у статей нет DOI, поэтому строка показывается, только если он есть -->
+    <a v-if="article.doi" class="article__doi" :href="article.doi" target="_blank" rel="noopener noreferrer">
+      DOI: {{ article.doi }}
+    </a>
+    <p class="article__excerpt">{{ excerpt }}</p>
 
     <p class="article__authors">
       <img :src="authorIcon" alt="" width="16" height="16" />
-      {{ text('authors') }}
+      {{ authors }}
     </p>
 
     <footer class="article__footer">
       <ul class="article__stats">
         <li>
           <img :src="calendarIcon" alt="" width="16" height="16" />
-          <time :datetime="article.date">{{ formatDate(article.date, locale) }}</time>
+          <time :datetime="date">{{ formatDate(date, locale) }}</time>
         </li>
         <li :title="t('articles.views', { n: article.views })">
           <img :src="eyeIcon" alt="" width="16" height="16" />
           <span aria-hidden="true">{{ article.views }}</span>
           <span class="visually-hidden">{{ t('articles.views', { n: article.views }) }}</span>
         </li>
-        <li :title="t('articles.downloads', { n: article.downloads })">
+        <li :title="t('articles.downloads', { n: article.download })">
           <img :src="downloadIcon" alt="" width="16" height="16" />
-          <span aria-hidden="true">{{ article.downloads }}</span>
-          <span class="visually-hidden">{{ t('articles.downloads', { n: article.downloads }) }}</span>
+          <span aria-hidden="true">{{ article.download }}</span>
+          <span class="visually-hidden">{{ t('articles.downloads', { n: article.download }) }}</span>
         </li>
       </ul>
       <div class="article__actions">
-        <BaseButton size="sm" href="#">{{ t('articles.read') }}</BaseButton>
-        <BaseButton size="sm" variant="outline" href="#">{{ t('articles.download') }}</BaseButton>
+        <BaseButton size="sm" :href="article.files" target="_blank" rel="noopener noreferrer">
+          {{ t('articles.read') }}
+        </BaseButton>
+        <BaseButton size="sm" variant="outline" :href="article.files" download>{{ t('articles.download') }}</BaseButton>
       </div>
     </footer>
   </article>

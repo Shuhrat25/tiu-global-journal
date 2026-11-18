@@ -1,30 +1,30 @@
 <script setup>
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { formatDate } from '@/i18n/dates'
+import { toIsoDate } from '@/api/home'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import eyeIcon from '@/assets/icons/eye.svg'
 
-const props = defineProps({
+// item — новость из API: title, files (картинка), views, created_at
+defineProps({
   item: { type: Object, required: true },
 })
 
 const { t, locale } = useI18n()
-const title = computed(() => t(`news.items.${props.item.id}`))
 </script>
 
 <template>
   <article class="news-card">
     <a class="news-card__link" href="#">
       <div class="news-card__media">
-        <img :src="item.image" alt="" loading="lazy" />
+        <img :src="item.files" alt="" loading="lazy" />
       </div>
-      <h3 class="news-card__title">{{ title }}</h3>
+      <h3 class="news-card__title">{{ item.title }}</h3>
     </a>
     <footer class="news-card__meta">
       <span class="news-card__meta-item">
         <img :src="calendarIcon" alt="" width="20" height="20" />
-        <time :datetime="item.date">{{ formatDate(item.date, locale) }}</time>
+        <time :datetime="toIsoDate(item.created_at)">{{ formatDate(toIsoDate(item.created_at), locale) }}</time>
       </span>
       <span class="news-card__meta-item" :title="t('news.views', { n: item.views })">
         <img :src="eyeIcon" alt="" width="20" height="20" />
@@ -37,8 +37,7 @@ const title = computed(() => t(`news.items.${props.item.id}`))
 
 <style scoped>
 .news-card {
-  /* containing block of the visually hidden "views" label: without it the label is positioned
-     against the page, and in the scrolling row (below 1280px) off-screen cards widen the page */
+  /* containing block of the visually hidden "views" label (otherwise it is positioned against the page) */
   position: relative;
   display: flex;
   flex-direction: column;

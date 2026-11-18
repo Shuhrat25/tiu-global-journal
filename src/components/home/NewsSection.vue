@@ -1,11 +1,22 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { news } from '@/data/home'
+import { getNews } from '@/api/home'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import NewsCard from './NewsCard.vue'
 
 const { t } = useI18n()
+
+const news = ref([]) // приходят с API
+
+onMounted(async () => {
+  try {
+    news.value = await getNews()
+  } catch (error) {
+    console.error('Не удалось загрузить новости', error)
+  }
+})
 </script>
 
 <template>
@@ -33,37 +44,23 @@ const { t } = useI18n()
   gap: 24px;
 }
 
-/* Below desktop the cards become a swipeable row */
+/* На экранах поменьше карточки, которые не помещаются, переносятся на новую строку */
 @media (max-width: 1279.98px) {
   .news {
-    display: flex;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
-    margin-inline: calc(var(--gutter) * -1);
-    padding: 4px var(--gutter) 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
   }
+}
 
-  .news::-webkit-scrollbar {
-    display: none;
-  }
-
-  .news__item {
-    flex: 0 0 281px;
-    scroll-snap-align: start;
-  }
-
-  .section__actions {
-    margin-top: 8px;
+@media (max-width: 767.98px) {
+  .news {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 479.98px) {
-  .news__item {
-    flex-basis: 78%;
+  .news {
+    grid-template-columns: 1fr;
   }
 }
 </style>

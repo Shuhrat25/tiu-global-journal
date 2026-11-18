@@ -1,11 +1,26 @@
 <script setup>
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { heroStats, latestIssue } from '@/data/home'
+import { latestIssue } from '@/data/home'
 import { SUBMIT_ROUTE } from '@/data/site'
 import { formatMonthYear } from '@/i18n/dates'
+import { getStats } from '@/api/home'
 import sendIcon from '@/assets/icons/send-blue.svg'
 
 const { t, locale } = useI18n()
+
+const stats = ref([]) // приходят с API: title — подпись, options — число
+
+async function loadStats() {
+  try {
+    stats.value = await getStats()
+  } catch (error) {
+    console.error('Не удалось загрузить статистику', error)
+  }
+}
+
+onMounted(loadStats)
+watch(locale, loadStats) // подписи на другом языке
 </script>
 
 <template>
@@ -37,9 +52,9 @@ const { t, locale } = useI18n()
       </div>
 
       <ul class="stats">
-        <li v-for="stat in heroStats" :key="stat.key" class="stats__item">
-          <span class="stats__value">{{ stat.value }}</span>
-          <span class="stats__label">{{ t(`hero.stats.${stat.key}`) }}</span>
+        <li v-for="stat in stats" :key="stat.id" class="stats__item">
+          <span class="stats__value">{{ stat.options }}</span>
+          <span class="stats__label">{{ stat.title }}</span>
         </li>
       </ul>
     </div>

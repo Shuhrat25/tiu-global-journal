@@ -219,6 +219,7 @@ export default {
     removeFile: 'Remove file',
     submit: 'Send message',
     success: 'Thank you! Your message has been received, and we will get back to you shortly.',
+    sendError: 'Could not send your message. Please try again a little later.',
     errors: {
       name: 'Please enter your full name',
       phone: 'Please enter your full phone number',
