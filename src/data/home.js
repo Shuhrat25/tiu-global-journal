@@ -8,13 +8,6 @@ import news3 from '@/assets/images/news/news-3.jpg'
 import news4 from '@/assets/images/news/news-4.jpg'
 import news5 from '@/assets/images/news/news-5.jpg'
 
-import jurnalTv from '@/assets/images/partners/jurnal-tv.png'
-import jurnalMekari from '@/assets/images/partners/jurnal-mekari.png'
-import digitalJournal from '@/assets/images/partners/digital-journal.png'
-import jurnalIlmiah from '@/assets/images/partners/jurnal-ilmiah.png'
-import journalStories from '@/assets/images/partners/journal-stories.png'
-import rumahJurnal from '@/assets/images/partners/rumah-jurnal.png'
-
 export const latestIssue = {
   number: 12,
   year: 2025,
@@ -59,15 +52,6 @@ export const articles = [
   { id: 'a4', pages: [32, 40], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
   { id: 'a5', pages: [41, 48], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
   { id: 'a6', pages: [49, 57], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
-]
-
-export const partners = [
-  { name: 'Jurnal TV', logo: jurnalTv, box: { w: 88.11, h: 41.18, x: 5.94, y: 29.41 } },
-  { name: 'Jurnal by Mekari', logo: jurnalMekari, box: { w: 87.03, h: 42.65, x: 6.48, y: 28.68 } },
-  { name: 'Digital Journal', logo: digitalJournal, box: { w: 74.88, h: 113.97, x: 12.56, y: -6.99 } },
-  { name: 'Jurnal Ilmiah', logo: jurnalIlmiah, box: { w: 90.8, h: 42.65, x: 4.6, y: 28.68 } },
-  { name: 'Journal Stories', logo: journalStories, box: { w: 89.19, h: 38.24, x: 5.41, y: 30.88 } },
-  { name: 'Rumah Jurnal', logo: rumahJurnal, box: { w: 90.94, h: 41.18, x: 4.53, y: 29.41 } },
 ]
 
 export const pollOptions = ['o1', 'o2', 'o3', 'o4', 'o5']
