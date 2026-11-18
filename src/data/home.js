@@ -8,12 +8,6 @@ import news3 from '@/assets/images/news/news-3.jpg'
 import news4 from '@/assets/images/news/news-4.jpg'
 import news5 from '@/assets/images/news/news-5.jpg'
 
-import base from '@/assets/images/indexing/base.png'
-import doi from '@/assets/images/indexing/doi.png'
-import googleScholar from '@/assets/images/indexing/google-scholar.png'
-import inLibrary from '@/assets/images/indexing/inlibrary.png'
-import crossref from '@/assets/images/indexing/crossref.png'
-
 import jurnalTv from '@/assets/images/partners/jurnal-tv.png'
 import jurnalMekari from '@/assets/images/partners/jurnal-mekari.png'
 import digitalJournal from '@/assets/images/partners/digital-journal.png'
@@ -27,14 +21,12 @@ export const latestIssue = {
   published: '2025-11-01',
 }
 
-/* key → hero.stats.<key> */
 export const heroStats = [
   { key: 'articles', value: '500+' },
   { key: 'authors', value: '200+' },
   { key: 'countries', value: '15+' },
 ]
 
-/* id → categories.items.<id> */
 export const categories = [
   { id: 'c1', icon: 'trending-up', count: 124 },
   { id: 'c2', icon: 'book-open', count: 98 },
@@ -50,7 +42,6 @@ export const featuredIssue = {
   href: '#',
 }
 
-/* id → news.items.<id> */
 export const news = [
   { id: 'n1', image: news1, date: '2025-11-18', views: 238 },
   { id: 'n2', image: news2, date: '2025-11-08', views: 456 },
@@ -61,7 +52,6 @@ export const news = [
 
 const doiLink = 'https://doi.org/10.35465/ku.v16i.1254'
 
-/* id → articles.items.<id> */
 export const articles = [
   { id: 'a1', pages: [5, 12], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
   { id: 'a2', pages: [13, 22], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
@@ -69,19 +59,6 @@ export const articles = [
   { id: 'a4', pages: [32, 40], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
   { id: 'a5', pages: [41, 48], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
   { id: 'a6', pages: [49, 57], doi: doiLink, date: '2025-11-21', views: 876, downloads: 298 },
-]
-
-/*
- * Logo placement inside its card is copied from Figma (percentages of the
- * inner logo box), so the logos keep their exact visual size at any width.
- * Names are brand names and are not translated.
- */
-export const indexingBases = [
-  { name: 'BASE', href: 'https://www.base-search.net', logo: base, fit: 'contain' },
-  { name: 'DOI', href: 'https://www.doi.org', logo: doi, box: { w: 46.15, h: 80.77, x: 26.92, y: 9.62 } },
-  { name: 'Google Scholar', href: 'https://scholar.google.com', logo: googleScholar, box: { w: 70.33, h: 123.08, x: 14.84, y: -11.54 } },
-  { name: 'inLibrary', href: 'https://inlibrary.uz', logo: inLibrary, box: { w: 89.01, h: 155.77, x: 5.49, y: -27.88 } },
-  { name: 'Crossref', href: 'https://www.crossref.org', logo: crossref, box: { w: 87.48, h: 51.92, x: 6.26, y: 24.04 } },
 ]
 
 export const partners = [
@@ -93,5 +70,4 @@ export const partners = [
   { name: 'Rumah Jurnal', logo: rumahJurnal, box: { w: 90.94, h: 41.18, x: 4.53, y: 29.41 } },
 ]
 
-/* key → poll.options.<key> */
 export const pollOptions = ['o1', 'o2', 'o3', 'o4', 'o5']
