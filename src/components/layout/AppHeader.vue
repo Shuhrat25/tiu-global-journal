@@ -1,13 +1,12 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { SUBMIT_ROUTE, mainMenu } from '@/data/site'
-import { getContacts } from '@/api/home'
+import { SUBMIT_ROUTE } from '@/data/site'
+import { getContacts, getMenu, menuLink } from '@/api'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import AppLink from '@/components/ui/AppLink.vue'
 
 import logo from '@/assets/images/logo.svg'
 import envelopeIcon from '@/assets/icons/envelope.svg'
@@ -17,10 +16,12 @@ import searchIcon from '@/assets/icons/search.svg'
 import sendIcon from '@/assets/icons/send.svg'
 import userIcon from '@/assets/icons/user.svg'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
+const router = useRouter()
 
 const contacts = ref({}) // почта и телефон с API
+const menu = ref([]) // меню с API: title, alias, inner_link, children (подпункты)
 
 onMounted(async () => {
   try {
@@ -29,6 +30,29 @@ onMounted(async () => {
     console.error('Не удалось загрузить контакты', error)
   }
 })
+
+async function loadMenu() {
+  try {
+    menu.value = await getMenu()
+  } catch (error) {
+    console.error('Не удалось загрузить меню', error)
+  }
+}
+
+onMounted(loadMenu)
+watch(locale, loadMenu) // пункты меню на другом языке
+
+// есть ли у пункта меню подпункты
+function hasChildren(item) {
+  return item.children && item.children.length > 0
+}
+
+// Поиск: переходим на страницу /search?query=...
+function onSearch() {
+  if (!searchQuery.value.trim()) return
+  router.push({ path: '/search', query: { query: searchQuery.value.trim() } })
+  searchQuery.value = ''
+}
 
 const openDropdown = ref(null) // index of the desktop dropdown that is open
 const mobileOpen = ref(false)
@@ -71,7 +95,7 @@ function onDropdownClick(index) {
 
 /* A top-level item is highlighted when the current page is one of its children */
 function isSectionActive(item) {
-  return item.children?.some((child) => child.to?.name === route.name) ?? false
+  return item.children.some((child) => menuLink(child) === route.path)
 }
 
 const mobileMenuTop = ref(0)
@@ -178,13 +202,13 @@ onBeforeUnmount(() => {
       <nav class="navbar__menu" :aria-label="t('header.mainMenu')">
         <ul class="menu">
           <li
-            v-for="(item, index) in mainMenu"
-            :key="item.key"
+            v-for="(item, index) in menu"
+            :key="item.id"
             class="menu__item"
-            @mouseenter="item.children && onItemEnter(index)"
-            @mouseleave="item.children && onItemLeave()"
+            @mouseenter="hasChildren(item) && onItemEnter(index)"
+            @mouseleave="hasChildren(item) && onItemLeave()"
           >
-            <template v-if="item.children">
+            <template v-if="hasChildren(item)">
               <button
                 type="button"
                 class="menu__link"
@@ -193,7 +217,7 @@ onBeforeUnmount(() => {
                 :aria-expanded="openDropdown === index"
                 @click="onDropdownClick(index)"
               >
-                {{ t(`nav.${item.key}`) }}
+                {{ item.title }}
                 <img
                   class="menu__chevron"
                   :class="{ 'is-open': openDropdown === index }"
@@ -205,17 +229,17 @@ onBeforeUnmount(() => {
               </button>
               <Transition name="dropdown">
                 <ul v-show="openDropdown === index" class="dropdown">
-                  <li v-for="child in item.children" :key="child.key">
-                    <AppLink class="dropdown__link" :to="child.to" :href="child.href" @click="closeAll">
-                      {{ t(`nav.${child.key}`) }}
-                    </AppLink>
+                  <li v-for="child in item.children" :key="child.id">
+                    <RouterLink class="dropdown__link" :to="menuLink(child)" @click="closeAll">
+                      {{ child.title }}
+                    </RouterLink>
                   </li>
                 </ul>
               </Transition>
             </template>
-            <AppLink v-else class="menu__link" :to="item.to" :href="item.href" @click="closeAll">
-              {{ t(`nav.${item.key}`) }}
-            </AppLink>
+            <RouterLink v-else class="menu__link" :to="menuLink(item)" @click="closeAll">
+              {{ item.title }}
+            </RouterLink>
           </li>
         </ul>
       </nav>
@@ -260,7 +284,7 @@ onBeforeUnmount(() => {
     <!-- Search panel -->
     <Transition name="dropdown">
       <div v-show="searchOpen" ref="searchPanel" class="search-panel">
-        <form class="container search-panel__form" role="search" @submit.prevent>
+        <form class="container search-panel__form" role="search" @submit.prevent="onSearch">
           <label class="visually-hidden" for="site-search">{{ t('header.searchLabel') }}</label>
           <input
             id="site-search"
@@ -286,15 +310,15 @@ onBeforeUnmount(() => {
       >
         <nav class="container" :aria-label="t('header.mobileMenu')">
           <ul class="mobile-menu__list">
-            <li v-for="(item, index) in mainMenu" :key="item.key" class="mobile-menu__item">
-              <template v-if="item.children">
+            <li v-for="(item, index) in menu" :key="item.id" class="mobile-menu__item">
+              <template v-if="hasChildren(item)">
                 <button
                   type="button"
                   class="mobile-menu__link"
                   :aria-expanded="mobileSection === index"
                   @click="mobileSection = mobileSection === index ? null : index"
                 >
-                  {{ t(`nav.${item.key}`) }}
+                  {{ item.title }}
                   <AppIcon
                     name="chevron-down"
                     :size="20"
@@ -303,14 +327,14 @@ onBeforeUnmount(() => {
                   />
                 </button>
                 <ul v-show="mobileSection === index" class="mobile-menu__sub">
-                  <li v-for="child in item.children" :key="child.key">
-                    <AppLink :to="child.to" :href="child.href" @click="closeAll">{{ t(`nav.${child.key}`) }}</AppLink>
+                  <li v-for="child in item.children" :key="child.id">
+                    <RouterLink :to="menuLink(child)" @click="closeAll">{{ child.title }}</RouterLink>
                   </li>
                 </ul>
               </template>
-              <AppLink v-else class="mobile-menu__link" :to="item.to" :href="item.href" @click="closeAll">
-                {{ t(`nav.${item.key}`) }}
-              </AppLink>
+              <RouterLink v-else class="mobile-menu__link" :to="menuLink(item)" @click="closeAll">
+                {{ item.title }}
+              </RouterLink>
             </li>
           </ul>
           <BaseButton class="mobile-menu__cta" :to="SUBMIT_ROUTE" block @click="closeAll">

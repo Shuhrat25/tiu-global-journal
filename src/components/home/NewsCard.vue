@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { formatDate } from '@/i18n/dates'
-import { toIsoDate } from '@/api/home'
+import { toIsoDate } from '@/api'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import eyeIcon from '@/assets/icons/eye.svg'
 
@@ -15,12 +15,13 @@ const { t, locale } = useI18n()
 
 <template>
   <article class="news-card">
-    <a class="news-card__link" href="#">
+    <!-- новость открывается на отдельной странице /news/:alias -->
+    <RouterLink class="news-card__link" :to="'/news/' + item.alias">
       <div class="news-card__media">
         <img :src="item.files" alt="" loading="lazy" />
       </div>
       <h3 class="news-card__title">{{ item.title }}</h3>
-    </a>
+    </RouterLink>
     <footer class="news-card__meta">
       <span class="news-card__meta-item">
         <img :src="calendarIcon" alt="" width="20" height="20" />

@@ -216,7 +216,7 @@ watch(
               />
               <I18nT keypath="cabinet.author.wizard.agree" tag="span" scope="global">
                 <template #requirements>
-                  <RouterLink :to="{ name: 'requirements' }" class="wizard__link" target="_blank" rel="noopener">
+                  <RouterLink to="/menu/requirements-for-articles" class="wizard__link" target="_blank" rel="noopener">
                     {{ t('cabinet.author.wizard.requirements') }}<span class="visually-hidden"> ({{ t('cabinet.author.wizard.newTab') }})</span>
                   </RouterLink>
                 </template>

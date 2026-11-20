@@ -2,7 +2,7 @@
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import { sendFeedback } from '@/api/home'
+import { sendFeedback } from '@/api'
 import { focusFirstInvalid } from '@/utils/focusFirstInvalid'
 import folderIcon from '@/assets/icons/folder.svg'
 

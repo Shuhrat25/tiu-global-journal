@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { latestIssue } from '@/data/home'
 import { SUBMIT_ROUTE } from '@/data/site'
 import { formatMonthYear } from '@/i18n/dates'
-import { getStats } from '@/api/home'
+import { getStats } from '@/api'
 import sendIcon from '@/assets/icons/send-blue.svg'
 
 const { t, locale } = useI18n()

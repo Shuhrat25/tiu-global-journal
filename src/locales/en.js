@@ -314,4 +314,25 @@ export default {
     map: 'Location on the map',
     openMap: 'View on map',
   },
+
+  // Pages that load their data from the API (news, articles, journal issues, etc.)
+  pages: {
+    news: 'News',
+    issues: 'Journal issues',
+    categories: 'Journal sections',
+    article: 'Article',
+    search: 'Search',
+    currentIssue: 'Current issue',
+    archive: 'Archive',
+    issueArticles: 'Articles in this issue',
+    downloadIssue: 'Download the journal',
+    noContent: 'There is no information on this page yet',
+    noArticles: 'There are no articles in this section yet',
+    loading: 'Loading...',
+    notFound: 'Nothing found',
+    results: 'Found: {n}',
+    prev: 'Previous',
+    next: 'Next',
+    downloadError: 'Could not download the file. Please try again a little later.',
+  },
 }

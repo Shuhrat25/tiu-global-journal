@@ -1,17 +1,41 @@
 <script setup>
+import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { aboutLinks } from '@/data/site'
-import AppLink from '@/components/ui/AppLink.vue'
+import { getMenu, menuLink } from '@/api'
 
-const { t } = useI18n()
+const { locale } = useI18n()
+const route = useRoute()
+
+const menu = ref([]) // меню с API
+
+async function loadMenu() {
+  try {
+    menu.value = await getMenu()
+  } catch (error) {
+    console.error('Не удалось загрузить меню', error)
+  }
+}
+
+onMounted(loadMenu)
+watch(locale, loadMenu)
+
+// Показываем раздел, в котором есть текущая страница.
+// Если такого нет — первый раздел («Журнал ҳақида»)
+const section = computed(() => {
+  const current = menu.value.find(
+    (item) => item.children && item.children.some((child) => menuLink(child) === route.path),
+  )
+  return current || menu.value[0]
+})
 </script>
 
 <template>
-  <aside class="side-menu">
-    <h2 class="side-menu__title">{{ t('nav.about') }}</h2>
+  <aside v-if="section" class="side-menu">
+    <h2 class="side-menu__title">{{ section.title }}</h2>
     <ul class="side-menu__list">
-      <li v-for="link in aboutLinks" :key="link.key">
-        <AppLink class="side-menu__link" :to="link.to" :href="link.href">{{ t(`nav.${link.key}`) }}</AppLink>
+      <li v-for="link in section.children" :key="link.id">
+        <RouterLink class="side-menu__link" :to="menuLink(link)">{{ link.title }}</RouterLink>
       </li>
     </ul>
   </aside>

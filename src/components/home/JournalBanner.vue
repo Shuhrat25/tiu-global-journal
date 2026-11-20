@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getGallery } from '@/api/home'
+import { getGallery } from '@/api'
 import buildingImage from '@/assets/images/university-building.jpg'
 import bookIcon from '@/assets/icons/book-open.svg'
 import downloadIcon from '@/assets/icons/download.svg'

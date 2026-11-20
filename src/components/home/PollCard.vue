@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pollOptions } from '@/data/home'
-import { getPollResults, sendVote } from '@/api/home'
+import { getPollResults, sendVote } from '@/api'
 import BaseButton from '@/components/ui/BaseButton.vue'
 
 const { t } = useI18n()

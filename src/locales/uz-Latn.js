@@ -337,5 +337,24 @@ export default {
     "socials": "Ijtimoiy tarmoqlar:",
     "map": "Xaritada manzil",
     "openMap": "Xaritada oçiş"
+  },
+  "pages": {
+    "news": "Yangiliklar",
+    "issues": "Jurnal sonlari",
+    "categories": "Jurnal yönalişlari",
+    "article": "Maqola",
+    "search": "Qidiruv",
+    "currentIssue": "Joriy son",
+    "archive": "Arxiv",
+    "issueArticles": "Uşbu son maqolalari",
+    "downloadIssue": "Jurnalni yuklab oliş",
+    "noContent": "Bu sahifa uçun maʼlumot hali qöşilmagan",
+    "noArticles": "Bu yönalişda hozirça maqolalar yöq",
+    "loading": "Yuklanmoqda...",
+    "notFound": "Heç narsa topilmadi",
+    "results": "Topildi: {n}",
+    "prev": "Oldingi",
+    "next": "Keyingi",
+    "downloadError": "Faylni yuklab bölmadi. Birozdan söng qayta urinib köring."
   }
 }

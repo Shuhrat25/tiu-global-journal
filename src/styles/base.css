@@ -103,6 +103,51 @@ button {
   border: 0;
 }
 
+/* Текст с HTML-тегами, который приходит с API (страницы меню, новости, статьи) */
+.rich-text {
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--color-heading);
+  overflow-wrap: anywhere;
+}
+
+.rich-text p,
+.rich-text ul,
+.rich-text ol,
+.rich-text table {
+  margin-bottom: 14px;
+}
+
+.rich-text ul {
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.rich-text ol {
+  padding-left: 22px;
+  list-style: decimal;
+}
+
+.rich-text a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.rich-text img {
+  height: auto;
+}
+
+.rich-text table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rich-text td,
+.rich-text th {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

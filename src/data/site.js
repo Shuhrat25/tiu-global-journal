@@ -1,46 +1,10 @@
 /*
- * Site-wide structure. Visible texts live in src/locales/* —
- * here every item only references its translation key (`key` → `nav.<key>`).
- * Items with `to` are internal routes, items with `href` are external/placeholder links.
+ * Site-wide structure. Visible texts live in src/locales/*.
+ * The menu (header, footer, page sidebar) comes from the journal API — see src/api/index.js.
  */
 
 /* "Submit an article" buttons open the author's cabinet with the submission wizard */
 export const SUBMIT_ROUTE = { name: 'author', query: { submit: '1' } }
-
-export const aboutLinks = [
-  { key: 'requirements', to: { name: 'requirements' } },
-  { key: 'editorial', to: { name: 'editorial' } },
-  { key: 'privacy', href: '#' },
-  { key: 'archive', href: '#' },
-]
-
-export const authorLinks = [
-  { key: 'template', href: '#' },
-  { key: 'reviewGuide', href: '#' },
-  { key: 'payment', href: '#' },
-  { key: 'ethics', href: '#' },
-  { key: 'plagiarism', href: '#' },
-]
-
-export const reviewerLinks = [
-  { key: 'reviewProcess', href: '#' },
-  { key: 'reviewPolicy', href: '#' },
-  { key: 'reviewerEthics', href: '#' },
-  { key: 'motivation', href: '#' },
-]
-
-export const mainMenu = [
-  { key: 'about', children: aboutLinks },
-  { key: 'authors', children: authorLinks },
-  { key: 'reviewers', children: reviewerLinks },
-  { key: 'contact', to: { name: 'contact' } },
-]
-
-export const footerColumns = [
-  { key: 'about', links: aboutLinks },
-  { key: 'authors', links: authorLinks },
-  { key: 'reviewers', links: reviewerLinks },
-]
 
 /* keys → footer.<key> */
 export const legalLinks = [

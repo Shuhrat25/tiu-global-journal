@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { latestIssue } from '@/data/home'
-import { getPosts } from '@/api/home'
+import { getPosts } from '@/api'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ArticleCard from './ArticleCard.vue'
@@ -36,7 +36,7 @@ onMounted(async () => {
       </ul>
 
       <div class="section__actions">
-        <BaseButton href="#">{{ t('articles.all') }}</BaseButton>
+        <BaseButton to="/issues">{{ t('articles.all') }}</BaseButton>
       </div>
     </div>
   </section>

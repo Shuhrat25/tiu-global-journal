@@ -5,7 +5,7 @@ import PageBanner from '@/components/page/PageBanner.vue'
 import ContactForm from '@/components/home/ContactForm.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import { contactSocials } from '@/data/site'
-import { getContacts } from '@/api/home'
+import { getContacts } from '@/api'
 
 const { t, locale } = useI18n()
 

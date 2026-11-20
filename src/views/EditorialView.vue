@@ -1,15 +1,34 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PageBanner from '@/components/page/PageBanner.vue'
 import PageWithSidebar from '@/components/page/PageWithSidebar.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import { editorialTabs } from '@/data/editorial'
+import { getEditorial } from '@/api'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-const activeTab = ref(editorialTabs[0].id)
-const members = computed(() => editorialTabs.find((tab) => tab.id === activeTab.value)?.members ?? [])
+// В API: option 1 — состав совета, option 2 — члены совета
+const editorialTabs = [
+  { id: 'board', option: 1 },
+  { id: 'members', option: 2 },
+]
+
+const activeTab = ref('board')
+const members = ref([]) // с API: title (ФИО), short_content (должность), files (фото)
+
+async function loadMembers() {
+  const tab = editorialTabs.find((item) => item.id === activeTab.value)
+  try {
+    members.value = await getEditorial(tab.option)
+  } catch (error) {
+    console.error('Не удалось загрузить редакцию', error)
+  }
+}
+
+onMounted(loadMembers)
+watch(activeTab, loadMembers) // другая вкладка
+watch(locale, loadMembers) // другой язык
 
 /* arrow-key navigation between tabs (WAI-ARIA tabs pattern) */
 function onTabKeydown(event, index) {
@@ -50,12 +69,12 @@ function onTabKeydown(event, index) {
       <ul :id="`panel-${activeTab}`" class="members" role="tabpanel" :aria-labelledby="`tab-${activeTab}`">
         <li v-for="member in members" :key="member.id" class="member">
           <div class="member__photo">
-            <img v-if="member.photo" :src="member.photo" :alt="t(`editorial.members.${member.id}.name`)" loading="lazy" />
+            <img v-if="member.files.length" :src="member.files[0].img" :alt="member.title" loading="lazy" />
             <AppIcon v-else name="users" :size="96" :stroke-width="1" />
           </div>
           <div class="member__text">
-            <h3 class="member__name">{{ t(`editorial.members.${member.id}.name`) }}</h3>
-            <p class="member__position">{{ t(`editorial.members.${member.id}.position`) }}</p>
+            <h3 class="member__name">{{ member.title }}</h3>
+            <p class="member__position">{{ member.short_content }}</p>
           </div>
         </li>
       </ul>

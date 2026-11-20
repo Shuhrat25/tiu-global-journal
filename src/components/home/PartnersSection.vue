@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getPartners } from '@/api/home'
+import { getPartners } from '@/api'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import LogoBox from '@/components/ui/LogoBox.vue'
@@ -26,7 +26,10 @@ onMounted(async () => {
 
       <ul class="partners">
         <li v-for="partner in partners" :key="partner.id" class="partner">
-          <LogoBox :src="partner.files[0].img" :alt="partner.title" ratio="206 / 136" />
+          <!-- в options лежит ссылка на сайт партнёра -->
+          <a :href="partner.options" target="_blank" rel="noopener noreferrer">
+            <LogoBox :src="partner.files[0].img" :alt="partner.title" ratio="206 / 136" />
+          </a>
         </li>
       </ul>
 

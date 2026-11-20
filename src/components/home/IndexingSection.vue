@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getBases } from '@/api/home'
+import { getBases } from '@/api'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import LogoBox from '@/components/ui/LogoBox.vue'

@@ -1,18 +1,18 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { footerColumns, footerSocials, legalLinks } from '@/data/site'
-import { getContacts } from '@/api/home'
+import { footerSocials, legalLinks } from '@/data/site'
+import { getContacts, getMenu, menuLink } from '@/api'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import AppLink from '@/components/ui/AppLink.vue'
 
 import mapPinIcon from '@/assets/icons/map-pin.svg'
 import phoneIcon from '@/assets/icons/phone-footer.svg'
 import mailIcon from '@/assets/icons/mail-footer.svg'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const contacts = ref({}) // почта и телефон с API
+const columns = ref([]) // разделы меню с подпунктами — колонки футера
 
 onMounted(async () => {
   try {
@@ -21,17 +21,30 @@ onMounted(async () => {
     console.error('Не удалось загрузить контакты', error)
   }
 })
+
+async function loadMenu() {
+  try {
+    const menu = await getMenu()
+    // в футер идут только разделы, у которых есть подпункты
+    columns.value = menu.filter((item) => item.children && item.children.length > 0)
+  } catch (error) {
+    console.error('Не удалось загрузить меню', error)
+  }
+}
+
+onMounted(loadMenu)
+watch(locale, loadMenu)
 </script>
 
 <template>
   <footer class="footer">
     <div class="container">
       <div class="footer__grid">
-        <nav v-for="column in footerColumns" :key="column.key" class="footer__col" :aria-label="t(`nav.${column.key}`)">
-          <h3 class="footer__title">{{ t(`nav.${column.key}`) }}</h3>
+        <nav v-for="column in columns" :key="column.id" class="footer__col" :aria-label="column.title">
+          <h3 class="footer__title">{{ column.title }}</h3>
           <ul class="footer__links">
-            <li v-for="link in column.links" :key="link.key">
-              <AppLink :to="link.to" :href="link.href">{{ t(`nav.${link.key}`) }}</AppLink>
+            <li v-for="link in column.children" :key="link.id">
+              <RouterLink :to="menuLink(link)">{{ link.title }}</RouterLink>
             </li>
           </ul>
         </nav>

@@ -77,10 +77,64 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      // требования к статьям теперь приходят с API как обычная страница меню
       path: '/requirements',
-      name: 'requirements',
-      component: () => import('@/views/RequirementsView.vue'),
-      meta: { titleKey: 'nav.requirements' },
+      redirect: '/menu/requirements-for-articles',
+    },
+    // ----- Страницы, которые берут данные с API -----
+    {
+      // страницы из меню: «Умумий маълумот», «Тўлов тафсилотлари» и т.д.
+      path: '/menu/:alias',
+      name: 'menu-page',
+      component: () => import('@/views/MenuPageView.vue'),
+    },
+    {
+      path: '/news',
+      name: 'news',
+      component: () => import('@/views/NewsListView.vue'),
+      meta: { titleKey: 'pages.news' },
+    },
+    {
+      path: '/news/:alias',
+      name: 'news-item',
+      component: () => import('@/views/NewsView.vue'),
+      meta: { titleKey: 'pages.news' },
+    },
+    {
+      path: '/articles/:alias',
+      name: 'article',
+      component: () => import('@/views/ArticleView.vue'),
+      meta: { titleKey: 'pages.article' },
+    },
+    {
+      path: '/issues',
+      name: 'issues',
+      component: () => import('@/views/IssuesView.vue'),
+      meta: { titleKey: 'pages.issues' },
+    },
+    {
+      path: '/issues/:alias',
+      name: 'issue',
+      component: () => import('@/views/IssueView.vue'),
+      meta: { titleKey: 'pages.issues' },
+    },
+    {
+      path: '/categories',
+      name: 'categories',
+      component: () => import('@/views/CategoriesView.vue'),
+      meta: { titleKey: 'pages.categories' },
+    },
+    {
+      path: '/categories/:alias',
+      name: 'category',
+      component: () => import('@/views/CategoryView.vue'),
+      meta: { titleKey: 'pages.categories' },
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('@/views/SearchView.vue'),
+      meta: { titleKey: 'pages.search' },
     },
     {
       path: '/editorial-board',
