@@ -5,7 +5,6 @@ import { toIsoDate } from '@/api'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import eyeIcon from '@/assets/icons/eye.svg'
 
-// item — новость из API: title, files (картинка), views, created_at
 defineProps({
   item: { type: Object, required: true },
 })
@@ -15,7 +14,6 @@ const { t, locale } = useI18n()
 
 <template>
   <article class="news-card">
-    <!-- новость открывается на отдельной странице /news/:alias -->
     <RouterLink class="news-card__link" :to="'/news/' + item.alias">
       <div class="news-card__media">
         <img :src="item.files" alt="" loading="lazy" />
@@ -38,7 +36,6 @@ const { t, locale } = useI18n()
 
 <style scoped>
 .news-card {
-  /* containing block of the visually hidden "views" label (otherwise it is positioned against the page) */
   position: relative;
   display: flex;
   flex-direction: column;
